@@ -1,0 +1,1 @@
+golsp 2025/08/07 17:16:38 main.go:15: fine the first log is created
