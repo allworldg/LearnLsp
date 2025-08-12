@@ -20,22 +20,22 @@ func EncodeMessage(msg any) string {
 	return fmt.Sprintf("Content-Length: %d\r\n\r\n%s", len(content), content)
 }
 
-func DecodeMessage(msg []byte) (string, int, error) {
+func DecodeMessage(msg []byte) (string, []byte, error) {
 	header, content, found := bytes.Cut(msg, []byte{'\r', '\n', '\r', '\n'})
 	if !found {
-		return "", 0, errors.New("can not find separator")
+		return "", nil, errors.New("can not find separator")
 	}
 	contentLengthBytes := header[len("Content-Length: "):]
 	contentLength, err := strconv.Atoi(string(contentLengthBytes))
 	if err != nil {
-		return "", 0, errors.New("cannot convert string to integer")
+		return "", nil, errors.New("cannot convert string to integer")
 	}
 	var baseMessage BaseMessage
 	err = json.Unmarshal(content[:contentLength], &baseMessage)
 	if err != nil {
-		return "", 0, err
+		return "", nil, err
 	}
-	return baseMessage.Method, contentLength, nil
+	return baseMessage.Method, content, nil
 }
 
 type SplitFunc func(data []byte, atEOF bool) (advance int, token []byte, err error)
@@ -59,4 +59,3 @@ func Split(data []byte, _ bool) (advance int, token []byte, err error) {
 
 }
 
-// func GetLogger
