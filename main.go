@@ -24,6 +24,7 @@ func main() {
 	}
 }
 func handleMessage(logger *log.Logger, method string, content []byte) {
+	logger.Printf("Receive the method: %s\n", method)
 	var initializeRequest lsp.InitializeRequest
 	switch method {
 	case "initialize":
@@ -34,6 +35,13 @@ func handleMessage(logger *log.Logger, method string, content []byte) {
 		version := initializeRequest.Params.ClientInfo.Version
 		name := initializeRequest.Params.ClientInfo.Name
 		logger.Printf("method is %s,the clientName is %s,clientVersion is %s\n", method, name, version)
+
+		//reply to the client
+		response := lsp.NewInitializeResponse(initializeRequest.Id)
+		strResponse := rpc.EncodeMessage(response)
+		writer := os.Stdout
+		writer.Write([]byte(strResponse))
+		logger.Printf("reply the request")
 	}
 }
 func getLogger(filePath string) *log.Logger {
