@@ -25,9 +25,9 @@ func main() {
 }
 func handleMessage(logger *log.Logger, method string, content []byte) {
 	logger.Printf("Receive the method: %s\n", method)
-	var initializeRequest lsp.InitializeRequest
 	switch method {
 	case "initialize":
+		var initializeRequest lsp.InitializeRequest
 		err := json.Unmarshal(content, &initializeRequest)
 		if err != nil {
 			logger.Printf("cannot unmarshal the content you give,%s\n", err)
@@ -42,6 +42,15 @@ func handleMessage(logger *log.Logger, method string, content []byte) {
 		writer := os.Stdout
 		writer.Write([]byte(strResponse))
 		logger.Printf("reply the request")
+	case "textDocument/didOpen":
+		var request lsp.DidOpenTextDocumentNotification
+		err := json.Unmarshal(content, &request)
+		if err != nil {
+			logger.Printf("cannnot unmarshal the didOpen content: %s\n", err)
+		}
+		textDocumentItem :=request.Params.TextDocument 
+		logger.Printf("uri is %s, languageId is %s, version is %d, text is %s\n",
+			textDocumentItem.Uri, textDocumentItem.LanguageId,textDocumentItem.Version,textDocumentItem.Text)
 	}
 }
 func getLogger(filePath string) *log.Logger {
