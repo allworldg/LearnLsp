@@ -26,6 +26,8 @@ func NewInitializeResponse(id int) InitializeResponse {
 			Capabilities: ServerCapabilities{
 				TextDocumentSync: 1,
 				HoverProvider:true,
+				DefinitionProvider:true,
+				CodeActionProvider: true,
 			},
 			ServerInfo: ServerInfo{
 				Name:    "learnLsp",

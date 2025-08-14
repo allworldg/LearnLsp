@@ -85,8 +85,35 @@ func handleMessage(logger *log.Logger, state analysis.State, method string, cont
 				Contents: "this is myhover",
 			},
 		})))
-
+	case "textDocument/definition":
+		var request lsp.GotoDefinitionDocumentRequest
+		err := json.Unmarshal(content, &request)
+		if err != nil {
+			logger.Printf("cannot unmarshal goto definition: %s\n", err)
+		}
+		logger.Printf("gotodefinition position line is %d, character is %d", request.Params.Position.Line, request.Params.Position.Character)
+		writer := os.Stdout
+		writer.Write([]byte(rpc.EncodeMessage(lsp.GotoDefinitionDocumentResponse{
+			Result: lsp.Location{
+				Uri: request.Params.TextDocument.Uri,
+				Range: lsp.Range{
+					Start: lsp.Position{
+						Line:      request.Params.Position.Line - 1,
+						Character: request.Params.Position.Character,
+					},
+					End: lsp.Position{
+						Line:      request.Params.Position.Line - 1,
+						Character: request.Params.Position.Character,
+					},
+				},
+			},
+			Response: lsp.Response{
+				Rpc: "2.0",
+				Id:  &request.Id,
+			},
+		})))
 	}
+
 }
 func getLogger(filePath string) *log.Logger {
 	file, err := os.OpenFile(filePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
