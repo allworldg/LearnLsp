@@ -25,6 +25,7 @@ type InitializeResult struct {
 
 type ServerCapabilities struct {
 	TextDocumentSync int `json:"textDocumentSync"`
+	HoverProvider bool `json:"hoverProvider"`
 }
 
 type ServerInfo struct {
