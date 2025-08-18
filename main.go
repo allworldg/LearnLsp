@@ -112,8 +112,22 @@ func handleMessage(logger *log.Logger, state analysis.State, method string, cont
 				Id:  &request.Id,
 			},
 		})))
+	case "textDocument/codeAction":
+		var request lsp.CodeActionRequest
+		err := json.Unmarshal(content, &request)
+		if err != nil {
+			logger.Printf("codeAction cannot unmarshal: %s\n", err)
+		}
+		logger.Println("request range is ",request.Params.Range)
+		writer := os.Stdout
+		writer.Write([]byte(rpc.EncodeMessage(lsp.CodeActionResponse{
+			Response: lsp.Response{
+				Rpc: "2.0",
+				Id:  &request.Id,
+			},
+			Result: state.GetCodeActionResult(request.Params.TextDocument.Uri,request.Params.Range),
+		})))
 	}
-
 }
 func getLogger(filePath string) *log.Logger {
 	file, err := os.OpenFile(filePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
@@ -124,3 +138,4 @@ func getLogger(filePath string) *log.Logger {
 	logger := log.New(file, "golsp ", log.Ldate|log.Ltime|log.Lshortfile)
 	return logger
 }
+

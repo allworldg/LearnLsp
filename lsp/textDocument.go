@@ -31,3 +31,26 @@ type Range struct {
 	Start Position `json:"start"`
 	End   Position `json:"end"`
 }
+type CodeActionContext struct {
+	// Diagnostics []Diagnostic `json:"diagnostics"`
+}
+
+type WorkSpaceEdit struct {
+	Changes map[string][]TextEdit `json:"changes"`
+}
+type TextEdit struct{
+	Range Range `json:"range"` 
+	NewText string `json:"newText"`
+}
+type Command struct {
+	Title string `json:"title"`
+	Command string `json:"command"`
+	Arguments []any `json:"arguments,omitempty"`
+}
+
+type Diagnostic struct {
+	Range    Range  `json:"range"`
+	Severity int    `json:"severity"`
+	Source   string `json:"source"`
+	Message  string `json:"message"`
+}
