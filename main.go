@@ -118,7 +118,6 @@ func handleMessage(logger *log.Logger, state analysis.State, method string, cont
 		if err != nil {
 			logger.Printf("codeAction cannot unmarshal: %s\n", err)
 		}
-		logger.Println("request range is ",request.Params.Range)
 		writer := os.Stdout
 		writer.Write([]byte(rpc.EncodeMessage(lsp.CodeActionResponse{
 			Response: lsp.Response{
@@ -126,6 +125,25 @@ func handleMessage(logger *log.Logger, state analysis.State, method string, cont
 				Id:  &request.Id,
 			},
 			Result: state.GetCodeActionResult(request.Params.TextDocument.Uri,request.Params.Range),
+		})))
+	case "textDocument/completion":
+		var reqeust lsp.CompletionRequest
+		err := json.Unmarshal(content,&reqeust)
+		if err!=nil{
+			logger.Printf("completion request cannot be unmarshaled : %s\n",err)
+		}
+		writer := os.Stdout
+		writer.Write([]byte(rpc.EncodeMessage(lsp.CompletionResponse{
+			Response: lsp.Response{
+				Rpc: "2.0",
+				Id:  &reqeust.Id,
+			},
+			Result:   []lsp.CompletionItem{
+				{
+					Label:    "fuck lsp",
+					Detail:   "this is a completionDetail",
+					Document: "this is completion document",
+				}},
 		})))
 	}
 }

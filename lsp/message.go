@@ -28,6 +28,7 @@ func NewInitializeResponse(id int) InitializeResponse {
 				HoverProvider:true,
 				DefinitionProvider:true,
 				CodeActionProvider: true,
+				CompletionProvider: CompletionOptions{},
 			},
 			ServerInfo: ServerInfo{
 				Name:    "learnLsp",

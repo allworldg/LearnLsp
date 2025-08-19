@@ -28,9 +28,14 @@ type ServerCapabilities struct {
 	HoverProvider      bool `json:"hoverProvider"`
 	DefinitionProvider bool `json:"definitionProvider"`
 	CodeActionProvider bool `json:"codeActionProvider"`
+	CompletionProvider CompletionOptions `json:"completionProvider"`
 }
 
 type ServerInfo struct {
 	Name    string `json:"name"`
 	Version string `json:"version"`
+}
+
+type CompletionOptions struct{
+	
 }
