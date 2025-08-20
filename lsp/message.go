@@ -1,7 +1,7 @@
 package lsp
 
 type Request struct {
-	JsonRpc string `json:"jsonrpc"`
+	Rpc string `json:"jsonrpc"`
 	Id      int    `json:"id"`
 	Method  string `json:"method"`
 }
@@ -29,6 +29,7 @@ func NewInitializeResponse(id int) InitializeResponse {
 				DefinitionProvider:true,
 				CodeActionProvider: true,
 				CompletionProvider: CompletionOptions{},
+
 			},
 			ServerInfo: ServerInfo{
 				Name:    "learnLsp",
